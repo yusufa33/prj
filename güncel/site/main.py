@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
+import uuid
 
 app = Flask(__name__)
 app.secret_key = "xyusuf-akgucx"
@@ -27,16 +28,16 @@ def db_kayit(sorgu, fetch_tipi="one", veri=None):
 @app.route("/") 
 def anasayfa():
     if "ad" in session and session["ad"] != None:         
-         return render_template("index.html")
+         return render_template("anasayfa.html")
     else:
-         return render_template("giris.html")
+         return render_template("index.html")
 
 @app.route("/kayit", methods=["GET", "POST"]) 
 def kayit_sayfasi():
     if request.method == "GET":
         return render_template("kayit.html")
     elif request.method == "POST":
-        isim = request.form["isim"]
+        isim = request.form["ad"]
         soyad = request.form["soyad"]
         yas = request.form["yas"]
         cinsiyet = request.form["cinsiyet"]
@@ -73,6 +74,22 @@ def cikis():
     session.pop("ad", None)
     session.pop("sifre", None)
     return redirect("/giris")
+
+@app.route("/girisbilgileri", methods=["POST"])
+def giris_kontrol():
+    email = request.form["email"]
+    sifre = request.form["sifre"]
+
+    sorgu = "SELECT * FROM kullanicilar WHERE kullanici_ad = ? AND sifre = ?"
+    veri = (email, sifre)
+    kayitlar = db_kayit(sorgu, fetch_tipi="all", veri=veri)
+    
+    if len(kayitlar) == 0:
+        return render_template("giris.html", hata="Kullanıcı bilgileri hatalı!")
+    else:
+        session["ad"] = isim
+        session["sifre"] = sifre
+        return redirect("/")
 
 if __name__ == "__main__":
     app.run(debug=True)
