@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap</title>
+</head>
+<body>
+
+<h2>Giriş Yap</h2>
+
+<form action="{{ url_for('giris_kontrol') }}" method="POST">
+    <label for="email">E-posta:</label><br>
+    <input type="email" id="email" name="kullanici_ad"><br>
+    <label for="sifre">Şifre:</label><br>
+    <input type="password" id="sifre" name="sifre"><br><br>
+    <button>Giriş Yap</button>
+</form>
+
+</body>
+</html>
